@@ -1,0 +1,58 @@
+﻿@model MusicStreaming.Models.Artist
+
+
+<h2>Artists From</h2>
+
+@using (Html.BeginForm("Save", "Artists", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <h4>Artist</h4>
+    <hr />
+    @Html.ValidationSummary(true, "Please fix the following errors.")
+    @Html.HiddenFor(a => a.ArtistId)
+
+    <div class="form-group">
+        @Html.LabelFor(a => a.Name)
+        <div class="col-md-10">
+            @Html.EditorFor(a => a.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(a => a.Name)
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        @Html.LabelFor(a => a.ImgUrl)
+        <input type="file" name="file" id="file" onchange="imageChange(this, document.getElementById('image'))" />
+
+        <img src="@Url.Content(Model.ImgUrl)" width="100" height="100" id="image" />
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts
+{
+    <script>
+        function imageChange(imageUploader, previewImage) {
+            if (imageUploader.files && imageUploader.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    console.log(previewImage);
+                    $(previewImage).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(imageUploader.files[0]);
+            }
+        }
+
+
+
+    </script>
+
+}

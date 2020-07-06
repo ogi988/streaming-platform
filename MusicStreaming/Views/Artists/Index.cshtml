@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MusicStreaming.Models.Artist>
+
+@{
+    ViewBag.Title = "Artists";
+    
+
+}
+
+<h3>@ViewBag.Title</h3>
+<div class="row">
+    <div class="col-md-2">
+        @using (Html.BeginForm("New", "Artists", FormMethod.Post))
+        {
+            <button type="submit" class="btn btn-primary">Add</button>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="artists" class="table  table-hover bg-white" >
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var artist in Model)
+                {
+                    <tr id="@artist.ArtistId">
+                        <td><img src="@Url.Content(artist.ImgUrl)" width="100" height="100" /></td>
+                        <td><a href="/Artists/Details/@artist.ArtistId">@artist.Name</a></td>
+                        <td><a href="/Artists/Edit/@artist.ArtistId"> Edit</a></td>
+                        <td><button class='btn btn-link js-delete' value="@artist.ArtistId">Delete</button></td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $("#artists").DataTable();
+        $("#artists").on("click", ".js-delete", function () {
+            var button = $(this);
+            var id = button.attr("value");
+                    $.ajax({
+                        url: "/api/artists/" + id,
+                        method: "DELETE",
+                        success: function () {
+                            $('table#artists tr#'+id).remove();
+                        }
+                    });
+                
+            });
+        
+
+
+    </script>
+    
+}
+

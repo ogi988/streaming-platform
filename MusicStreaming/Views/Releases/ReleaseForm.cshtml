@@ -1,0 +1,68 @@
+﻿@model MusicStreaming.ViewModels.ReleaseFormViewModel
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>Edit</h2>
+@using (Html.BeginForm("Save", "Releases", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "Please fix the following errors.")
+    <div class="form-group">
+        @Html.LabelFor(r => r.Release.Name)
+        @Html.TextBoxFor(r => r.Release.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(r => r.Release.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(r => r.Release.ReleaseTypeId)
+        @Html.DropDownListFor(r => r.Release.ReleaseTypeId, new SelectList(Model.ReleaseTypes, "ReleaseTypeId", "Name"), "Select Release Type", new { @class = "form-control" })
+        @Html.ValidationMessageFor(r => r.Release.ArtistID)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(r => r.Release.ArtistID)
+        @Html.DropDownListFor(r => r.Release.ArtistID, new SelectList(Model.Artists, "ArtistId", "Name"), "Select Artist", new { @class = "form-control" })
+        @Html.ValidationMessageFor(r => r.Release.ArtistID)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(s => s.SongId)
+        @Html.ListBoxFor(s => s.SongId, Model.Songs, new { @class = "form-control", size = 8 })
+        @Html.ValidationMessageFor(s => s.SongId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(r => r.Release.CreatedAt)
+        @Html.TextBoxFor(r => r.Release.CreatedAt, "{0:d MMM yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(r => r.Release.CreatedAt)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(r => r.Release.ImageUrl)
+        <input type="file" name="file" id="file" onchange="imageChange(this, document.getElementById('image'))" />
+        <img src="@Url.Content(Model.Release.ImageUrl)" width="100" height="100" id="image" />
+    </div>
+
+    @Html.HiddenFor(m => m.Release.ReleaseId)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts
+{
+    @*@Scripts.Render("~/bundles/jqueryval");*@
+    <script>
+        function imageChange(imageUploader, previewImage) {
+            if (imageUploader.files && imageUploader.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    console.log(previewImage);
+                    $(previewImage).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(imageUploader.files[0]);
+            }
+        }
+
+
+
+
+    </script>
+
+}

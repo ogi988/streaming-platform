@@ -1,0 +1,55 @@
+﻿@model MusicStreaming.ViewModels.PlaylistViewModel
+@{
+    ViewBag.Title = "Index";
+}
+    <div class="row">
+        <div class="col-md-2">
+            @using (Html.BeginForm("New", "Playlists", FormMethod.Post))
+            {
+                <button type="submit" class="btn btn-primary">Add</button>
+            }
+        </div>
+    </div>
+<h2>My playlists</h2>
+@foreach (var my in Model.MyPlaylists)
+{
+    <div class="col-md-2 margin-20">
+        <div class="card ">
+            <img src="@Url.Content(my.ImageUrl)" alt="" class="image">
+            <div class="middle">
+                <div class="text"><a href="/Playlists/Details/@my.PlaylistId">@my.Name</a></div>
+            </div>
+            <div class="title">
+                <p>Created By: @my.CreatedBy.Email</p>
+                <div style="margin-top:-15px">
+                    <a href="/Playlists/Edit/@my.PlaylistId">Edit</a>
+                    <a href="/Playlists/Delete/@my.PlaylistId">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<h2 style="margin-top:70px;">All playlists</h2>
+@foreach (var all in Model.AllPlaylists)
+{
+<div class="col-md-2 margin-20">
+    <div class="card ">
+        <img src="@Url.Content(all.ImageUrl)" alt="" class="image">
+        <div class="middle">
+            <div class="text"><a href="/Playlists/Details/@all.PlaylistId">@all.Name</a></div>
+        </div>
+        <div class="title">
+            <p>Created By:</p>
+            <div style="margin-top:-15px">
+               @all.CreatedBy.Email
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+

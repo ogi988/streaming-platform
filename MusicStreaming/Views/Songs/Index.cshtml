@@ -1,0 +1,74 @@
+﻿@model IEnumerable<MusicStreaming.Models.Song>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Songs</h2>
+
+<div class="row">
+    <div class="col-md-2">
+        @using (Html.BeginForm("New", "Songs", FormMethod.Post))
+        {
+            <button type="submit" class="btn btn-primary">Add</button>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="songs" class="table  table-hover bg-white">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Song</th>
+                    <th>Genre</th>
+                    <th>Artists</th>
+                    <th>Release</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var song in Model)
+                {
+                    <tr>
+                        <td><p>@song.Name</p></td>
+                        <td>@song.SongUrl</td>
+                        <td>@song.Genre.Name</td>
+                        <td>
+                            @foreach (var a in song.Artists)
+                            {
+
+                                <a href="/Artists/Details/@a.ArtistId">@a.Name </a>
+
+                            }
+                        </td>
+                        <td>
+                            @foreach (var r in song.Releases)
+                            {
+                                <a href="/Releases/Details/@r.ReleaseId">@r.Name </a>
+                            }
+                        </td>
+                        <td><a href="/Songs/Edit/@song.SongId"> Edit</a></td>
+
+                        <td>
+                            <a href="/Songs/Delete/@song.SongId"> Delete</a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $("#songs").DataTable();
+
+
+
+    </script>
+
+}

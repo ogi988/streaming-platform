@@ -1,0 +1,33 @@
+﻿@model MusicStreaming.ViewModels.PlaylistFormViewModel
+
+@{
+    ViewBag.Title = "Playlist";
+}
+
+<h2>Playlist</h2>
+
+@using (Html.BeginForm("Save", "Playlists", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+
+    @Html.ValidationSummary(true, "Please fix the following errors.")
+    <div class="form-group">
+        @Html.LabelFor(p => p.Playlist.Name)
+        @Html.TextBoxFor(p => p.Playlist.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(s => s.SongId)
+        @Html.ListBoxFor(s => s.SongId, Model.Songs, new { @class = "form-control", size = 8 })
+    </div>
+
+    @Html.HiddenFor(p => p.Playlist.PlaylistId)
+
+
+
+    <button type="submit" class="btn btn-primary">Create</button>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

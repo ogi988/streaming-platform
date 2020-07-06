@@ -1,0 +1,88 @@
+﻿@model PagedList.IPagedList<MusicStreaming.Models.Song>
+@{
+    ViewBag.Title = "Index";
+}
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<h2>Songs</h2>
+
+
+
+
+<div class="row">
+
+    <div class="col-md-4 offset-md-8">
+        @using (Html.BeginForm("Index", "Songs", FormMethod.Get))
+        {<div class="form-inline">
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control mr-1" })
+                <button type="submit" value="Search" class="btn btn-primary margin-20">Search</button>
+            </div>
+        }
+    </div>
+    @foreach (var song in Model)
+    {
+
+        <div class="col-md-2 margin-20">
+            <div class="card ">
+                @{
+                    var release = song.Releases.FirstOrDefault();
+                    if (release == null)
+                    {
+                        release = new MusicStreaming.Models.Release();
+                        release.ImageUrl = @"~/Uploads/ReleaseImages/default.png";
+                    }
+                }
+                <img src="@Url.Content(release.ImageUrl)" alt="" class="image">
+                <div class="middle">
+                    <div class="text"><button id="@song.SongId" value="@Url.Content(song.SongUrl)" onclick="Play(this.id)" class="btn btn-primary">Play</button></div>
+                </div>
+                <div class="title">
+                    <p>@song.Name</p>
+                    <div style="margin-top:-15px">
+                        @foreach (var artist in song.Artists)
+                        {
+                            <a href="/Artists/Details/@artist.ArtistId">@artist.Name </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+<br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    <div class="d-flex justify-content-center align-items-baseline" style="margin-top:50px">
+
+        <audio id="audio" controls="controls" style="width: 95%">
+            <source id="audioSource" src="">
+        </audio>
+    </div>
+
+
+
+    @section scripts
+{
+        <script>
+            $("#songs").DataTable();
+            function Play(clickedId) {
+                let src = document.getElementById(clickedId).value;
+                console.log(src);
+                var audio = document.getElementById('audio');
+
+                var source = document.getElementById('audioSource');
+                source.src = src
+
+                audio.load();
+                audio.play();
+            }
+
+
+
+        </script>
+
+    }
